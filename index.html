@@ -180,7 +180,7 @@
             let inputText = searchBox.value.trim();
             if (inputText) {
                 if (!inputText.startsWith('http://') && !inputText.startsWith('https://')) {
-                    inputText = 'http://' + inputText;
+                    inputText = 'https://' + inputText;
                 }
                 window.open(inputText, '_blank');
             }
