@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Siteproxy</title>
+    <style>
+        :root {
+            --bg-color: #0a0e27;
+            --text-color: #e2e8f0;
+            --accent-color: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.5);
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --card-hover: rgba(255, 255, 255, 0.1);
+            --input-bg: rgba(255, 255, 255, 0.08);
+            --input-border: rgba(255, 255, 255, 0.15);
+            --input-text: var(--text-color);
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: var(--text-color);
+            background:
+                radial-gradient(ellipse 120% 100% at 10% 0%, rgba(59, 130, 246, 0.15) 0%, transparent 40%),
+                radial-gradient(ellipse 80% 80% at 100% 100%, rgba(139, 92, 246, 0.12) 0%, transparent 40%),
+                radial-gradient(ellipse 60% 60% at 50% 50%, rgba(236, 72, 153, 0.05) 0%, transparent 50%),
+                var(--bg-color);
+        }
+
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0 20px;
+        }
+
+        .search-container {
+            width: 100%;
+            max-width: 520px;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 18px 90px 18px 28px;
+            font-size: 16px;
+            color: var(--input-text);
+            border: 1px solid var(--input-border);
+            background-color: var(--input-bg);
+            border-radius: 16px;
+            outline: none;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-box:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px var(--accent-glow), 0 8px 30px rgba(0, 0, 0, 0.15);
+            transform: scale(1.02);
+        }
+
+        .search-box::placeholder {
+            color: rgba(226, 232, 240, 0.4);
+            font-weight: 400;
+        }
+
+        .visit-btn {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 10px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-color);
+            background-color: var(--card-hover);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(20px);
+            letter-spacing: 1px;
+        }
+
+        .visit-btn:hover {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            color: white;
+            transform: translateY(-50%) scale(1.05);
+            box-shadow: 0 4px 15px var(--accent-glow);
+        }
+
+        .visit-btn:active {
+            transform: translateY(-50%) scale(0.98);
+        }
+
+        /* Light mode */
+        @media (prefers-color-scheme: light) {
+            :root {
+                --bg-color: #f8fafc;
+                --text-color: #1e293b;
+                --accent-color: #2563eb;
+                --accent-glow: rgba(37, 99, 235, 0.3);
+                --card-bg: rgba(255, 255, 255, 0.8);
+                --card-border: rgba(0, 0, 0, 0.1);
+                --card-hover: rgba(255, 255, 255, 1);
+                --input-bg: rgba(255, 255, 255, 0.9);
+                --input-border: rgba(0, 0, 0, 0.15);
+                --input-text: #0f172a;
+            }
+
+            body {
+                background:
+                    radial-gradient(ellipse 120% 100% at 10% 0%, rgba(37, 99, 235, 0.08) 0%, transparent 40%),
+                    radial-gradient(ellipse 80% 80% at 100% 100%, rgba(139, 92, 246, 0.06) 0%, transparent 40%),
+                    radial-gradient(ellipse 60% 60% at 50% 50%, rgba(236, 72, 153, 0.03) 0%, transparent 50%),
+                    var(--bg-color);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .search-container {
+                max-width: 100%;
+            }
+
+            .search-box {
+                padding: 16px 80px 16px 20px;
+                font-size: 15px;
+            }
+
+            .visit-btn {
+                padding: 8px 20px;
+                font-size: 13px;
+            }
+        }
+
+        @media (min-width: 641px) and (max-width: 1024px) {
+            .search-container {
+                max-width: 420px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="main">
+        <div class="search-container">
+            <input type="text" class="search-box" id="searchBox"/>
+            <button class="visit-btn" id="visitBtn">GO</button>
+        </div>
+    </main>
+
+    <script>
+        const searchBox = document.getElementById('searchBox');
+        const visitBtn = document.getElementById('visitBtn');
+
+        searchBox.addEventListener('keyup', (event) => {
+            if (event.key === 'Enter') {
+                navigate();
+            }
+        });
+
+        visitBtn.addEventListener('click', navigate);
+
+        function navigate() {
+            let inputText = searchBox.value.trim();
+            if (inputText) {
+                if (!inputText.startsWith('http://') && !inputText.startsWith('https://')) {
+                    inputText = 'http://' + inputText;
+                }
+                window.open(inputText, '_blank');
+            }
+        }
+    </script>
+</body>
+
+</html>
